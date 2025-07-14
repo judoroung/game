@@ -10,9 +10,9 @@ WIDTH = 800
 HEIGHT = 600
 
 class player(pygame.sprite.Sprite):
-    def __init__(self, game):
+    def __init__(self, block):
         pygame.sprite.Sprite.__init__(self)
-        self.game = game
+        self.block = block
         self.image = test
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/2, HEIGHT/2)
@@ -20,11 +20,10 @@ class player(pygame.sprite.Sprite):
         self.pos = vec(WIDTH/2, HEIGHT/2)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
-        
-
+    
     def jump(self):
         self.rect.y += 0.1
-        hits = pygame.sprite.spritecollide(self)
+        hits = pygame.sprite.spritecollide(self, self.block, False)
         self.rect.y -= 0.1
         if hits:
             self.vel.y = -20
@@ -41,8 +40,7 @@ class player(pygame.sprite.Sprite):
         self.pos += self.vel + 0.5*self.acc
         self.rect.midbottom = self.pos
         if self.vel.y > 0:
-            hits = pygame.sprite.spritecollide(self)
-            self.player.pos.y = hits[0].rect.top + 0.1
-            self.vel.y = 0
-
-
+            hits = pygame.sprite.spritecollide(self, self.block, False)
+            if hits:
+                self.pos.y = self.rect.top + 0.1
+                self.vel.y = 0
