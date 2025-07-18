@@ -3,9 +3,10 @@ from load import test
 vec = pygame.math.Vector2
 
 
-GRAVITY = 2
+GRAVITY = 1
 WIDTH = 800
 HEIGHT = 600
+detach = True
 
 class player(pygame.sprite.Sprite):
     def __init__(self, block):
@@ -17,16 +18,8 @@ class player(pygame.sprite.Sprite):
 
         self.pos = vec(WIDTH/2, HEIGHT/2)
         self.vel = vec(0, 0)
-        self.acc = vec(0, 0)
-
         self.collide = lambda: pygame.sprite.spritecollide(self, self.block, False)
-    
-    def jump(self):
-        self.rect.y += 0.1
-        hits = pygame.sprite.spritecollide(self, self.block, False)
-        self.rect.y -= 0.1
-        if hits:
-            self.vel.y = -15
+        self.detach = True
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -52,5 +45,9 @@ class player(pygame.sprite.Sprite):
             self.pos.y -= self.vel.y
             self.vel.y = 0
             if keys[pygame.K_UP]:
-                self.vel.y = -15
+                if self.detach:
+                    self.vel.y = -15
+                    self.detach = False
+            else :
+                self.detach = True
         self.rect.midbottom = self.pos
